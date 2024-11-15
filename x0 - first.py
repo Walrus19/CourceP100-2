@@ -1,0 +1,114 @@
+import os
+import random
+import copy
+
+PLAYERS = {2: 'o',
+           1: 'x'}
+
+current_player = 1
+
+field = [["[ ]", "[ ]", "[ ]"], ["[ ]", "[ ]", "[ ]"], ["[ ]", "[ ]", "[ ]"]]
+field_comp = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+for row in field:
+    for cell in row:
+        print(cell, end=" ")
+    print()
+
+
+def is_win(field):
+    # Работаю с полем только 3x3
+    size = len(field)  ## 3
+    # Проход по строке
+    if field != [["[ ]", "[ ]", "[ ]"], ["[ ]", "[ ]", "[ ]"], ["[ ]", "[ ]", "[ ]"]]:
+        for row in field:
+            if row[0] == row[1] == row[2] and row[0] and row[0] != "[ ]" and row[1] != "[ ]" and row[2] != "[ ]":
+                return True
+            # Проход по столбцу
+        for i in range(size):
+            if field[0][i] == field[1][i] == field[2][i] and field[0][i] and field[0][i] != "[ ]":
+                return True
+
+        # Главаная диагональ
+        if field[0][0] == field[1][1] == field[2][2] and field[0][0] and field[0][0] != "[ ]" and field[1][
+            1] != "[ ]" and field[2][2] != "[ ]":
+            return True
+        # Побочная диагональ
+        if field[0][2] == field[1][1] == field[2][0] and field[0][2] and field[0][2] != "[ ]" and field[1][
+            1] != "[ ]" and field[2][0] != "[ ]":
+            return True
+
+    return False
+
+
+def move(current_player, field, field_c):
+    position = [0, 0]
+    # os.system('cls||clear')
+    # position = input(f'Введите позицию игрок ({current_player}):').split(sep=',')
+    if current_player == 1:
+        while True:
+            try:
+                position = input(f'Введите позицию игрок ({current_player}):').split(sep=',')
+                position = [int(el) for el in position]
+            except ValueError:
+                print('Ошибочный ввод')
+                continue
+            break
+    else:
+        # copy_field_c = copy.deepcopy(field_c)
+        # position = random.choice(copy_field_c)
+        # copy_field_c.remove(position)
+        position = random.choice(field_c)
+        field_c.remove(position)
+    print(position)
+    if field[position[0]][position[1]] == '[ ]':
+        field[position[0]][position[1]] = ' ' + PLAYERS[current_player] + ' '
+    else:
+        print('Ошибочный ввод')
+        move(current_player, field)
+        return
+
+    for row in field:
+        for cell in row:
+            print(cell, end=" ")
+        print()
+
+    # if current_player == 1:
+    #     if field[position[0]][position[1]] == '[ ]':
+    #         field[position[0]][position[1]] = ' x '
+    #     else:
+    #         print('Ошибочный ввод')
+    #         move(current_player, field)
+    #         c = 1
+    # else:
+    #     if field[position[0]][position[1]] == '[ ]':
+    #         field[position[0]][position[1]] = ' 0 '
+    #     else:
+    #         print('Ошибочный ввод')
+    #         move(current_player, field)
+    #         c = 1
+    # if c == 0:
+    #     for row in field:
+    #         for cell in row:
+    #             print(cell, end=" ")
+    #         print()
+
+
+# count = 0
+for i in range(9):
+    move(current_player, field, field_comp)
+    if is_win(field):
+        print(f'Вы выиграли!, player = {current_player}')
+        break
+    current_player = 1 if current_player == 2 else 2
+if i == 8:
+    print("Ничья")
+
+# while not is_win(field):
+#
+#     if is_win(field):
+#
+#         break
+#     move(2,field)
+#     # count += count
+# # is_win()
+# print('Вы выиграли!')
